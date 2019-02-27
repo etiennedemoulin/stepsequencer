@@ -1,0 +1,30 @@
+2019-02-27 18:53:59			- /js/player.js:60:27	"Uncaught TypeError: Failed to set the 'value' property on 'AudioParam': The provided float value is non-finite."
+	Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.119 Safari/537.36
+
+2019-02-27 18:54:28			- /js/player.js:60:27	"Uncaught TypeError: Failed to set the 'value' property on 'AudioParam': The provided float value is non-finite."
+	Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.119 Safari/537.36
+
+2019-02-27 18:55:10			- /js/player.js:60:28	"Uncaught TypeError: Failed to set the 'value' property on 'AudioParam': The provided float value is non-finite."
+	Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.119 Safari/537.36
+
+2019-02-27 18:59:21			- /js/player.js:63:28	"Uncaught TypeError: Failed to set the 'value' property on 'AudioParam': The provided float value is non-finite."
+	Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.119 Safari/537.36
+
+2019-02-27 18:59:36			- /js/player.js:63:28	"Uncaught TypeError: Failed to set the 'value' property on 'AudioParam': The provided float value is non-finite."
+	Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.119 Safari/537.36
+
+2019-02-27 18:59:52			- /js/player.js:63:28	"Uncaught TypeError: Failed to set the 'value' property on 'AudioParam': The provided float value is non-finite."
+	Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.119 Safari/537.36
+
+2019-02-27 19:00:21			- /js/player.js:63:28	"Uncaught TypeError: Failed to set the 'value' property on 'AudioParam': The provided float value is non-finite."
+	Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.119 Safari/537.36
+
+2019-02-27 19:11:08			- /js/player.js:149:28	"Uncaught TypeError: Cannot set property 'value' of undefined"
+	Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.119 Safari/537.36
+
+2019-02-27 19:12:40			- /js/player.js:150:28	"Uncaught TypeError: Cannot set property 'value' of undefined"
+	Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.119 Safari/537.36
+
+2019-02-27 19:12:52			- /js/player.js:153:9	"Uncaught TypeError: Failed to execute 'connect' on 'AudioNode': No function was found that matched the signature provided."
+	Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.119 Safari/537.36
+

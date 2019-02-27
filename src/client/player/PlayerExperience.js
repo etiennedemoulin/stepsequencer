@@ -24,7 +24,11 @@ const template = `
         frequency
         <input class="slider" id="frequency" type="range" min="100" max="1000" step='1' value="<%= frequency %>" />
         <br />
+        sound
         <input class='slider' id='soundNum' type="range" min="0" max="2" step="1" value='<%= soundNum %>' />
+        <br />
+        masterGain
+        <input class='slider' id='masterGain' type='range' min='-80' max="0" step='0.5' value='<%= masterGain %>' />
       </div>
     </div>
     <div class="section-bottom flex-middle"></div>
@@ -53,13 +57,16 @@ class PlayerExperience extends soundworks.Experience {
 
   async start() {
     super.start();
-    this.pattern = [1, 1, 1, 1, 1, 1, 1, 1];
+    this.pattern = [1, 0, 1, 0, 1, 0, 1, 0];
     const frequency = 500;
-    const soundNum = 0;
+    const soundNum = 1;
+    const masterGain = 1;
     this.buffer = this.audioBufferManager.data[soundNum];
-    // console.log(this.buffer)
+
+
     // this.patternEngine = new PatternEngine(this.syncScheduler, this.pattern, frequency);
-    this.patternEngine = new BufferEngine(this.syncScheduler, this.pattern, this.buffer);
+    this.patternEngine = new BufferEngine(this.syncScheduler, this.pattern, this.buffer, masterGain);
+
 
  
 
@@ -70,7 +77,8 @@ class PlayerExperience extends soundworks.Experience {
     this.view = new soundworks.SegmentedView(template, { 
       pattern: this.pattern,
       frequency: frequency,
-      soundNum: soundNum
+      soundNum: soundNum,
+      masterGain: masterGain
     }, {
       'click .beat': (e) => {
         const $el = e.target;
@@ -87,6 +95,13 @@ class PlayerExperience extends soundworks.Experience {
         const $el = e.target;
         const soundNum = parseInt($el.value);
         this.patternEngine.buffer = this.audioBufferManager.data[soundNum];
+      },
+      'input #masterGain': (e) => {
+        const $el = e.target;
+        const masterGain = Math.pow(10, parseFloat($el.value)/20);
+        // console.log(masterGain);
+        // this.masterGain = ;
+        this.patternEngine.masterGain = masterGain;
       }
     }, {});
 
@@ -99,7 +114,7 @@ class PlayerExperience extends soundworks.Experience {
 
     this.sharedParams.addParamListener('BPM', () => this.updateEnginePeriod());
     this.sharedParams.addParamListener('numBeats', () => this.updateEnginePeriod());
-
+    // this.sharedParams.addParamListener('son', () => this.updateEnginePeriod());
     this.updateEnginePeriod();
 
     }
@@ -112,6 +127,7 @@ class PlayerExperience extends soundworks.Experience {
       }
       const BPM = this.sharedParams.getValue('BPM');
       const numBeats = this.sharedParams.getValue('numBeats');
+      // this.son = this.sharedParams.getValue('son');
       const period = (60 / BPM) / numBeats;
 //        const numeroClient = soundworks.client.index % frequencies.length;
       
