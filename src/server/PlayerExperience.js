@@ -9,6 +9,9 @@ export default class PlayerExperience extends Experience {
     this.sharedConfig = this.require('shared-config');
     this.sharedParams = this.require('shared-params');
     this.audioBufferManager = this.require('audio-buffer-manager');
+
+//  this.sync = this.require('sync'); //on veut la synchro
+    this.syncScheduler = this.require('sync-scheduler'); //on synchronise tous nos copains
   }
 
   start() {

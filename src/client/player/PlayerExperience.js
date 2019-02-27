@@ -1,20 +1,37 @@
 import * as soundworks from 'soundworks/client';
-import PlayerRenderer from './PlayerRenderer';
+import PatternEngine from './PatternEngine'
+import * as controllers from '@ircam/basic-controllers';
+import BufferEngine from './BufferEngine';
 
+
+
+//on se simplifie un peu l'écriture
 const audioContext = soundworks.audioContext;
+const audio = soundworks.audio;
 
+
+
+//pour faire des gui, on passe par la!! (mais ça va changer tkt frer)
 const template = `
-  <canvas class="background"></canvas>
   <div class="foreground">
     <div class="section-top flex-middle"></div>
     <div class="section-center flex-center">
-      <p class="big"><%= title %></p>
+      <div>
+        <% for (var i = 0; i < pattern.length; i++) { %>
+          <input class="beat" type="checkbox" data-index="<%= i %>"<%= pattern[i] === 1 ? ' checked' : '' %> />
+        <% } %>
+        <br /><br />
+        frequency
+        <input class="slider" id="frequency" type="range" min="100" max="1000" step='1' value="<%= frequency %>" />
+        <br />
+        <input class='slider' id='soundNum' type="range" min="0" max="2" step="1" value='<%= soundNum %>' />
+      </div>
     </div>
     <div class="section-bottom flex-middle"></div>
   </div>
 `;
 
-const model = { title: `ok` };
+
 
 
 class PlayerExperience extends soundworks.Experience {
@@ -23,32 +40,104 @@ class PlayerExperience extends soundworks.Experience {
 
     this.platform = this.require('platform', { features: ['web-audio'] });
     this.checkin = this.require('checkin', { showDialog: false });
-    this.audioBufferManager = this.require('audio-buffer-manager', {
-      assetsDomain: assetsDomain,
-      files: [ /* ... */ ],
-    });
+    this.sharedParams = this.require('shared-params');
+//  this.sync = this.require('sync'); //on veut la synchro
+    this.syncScheduler = this.require('sync-scheduler'); //on synchronise tous nos copains
+    this.audioBufferManager = this.require('audio-buffer-manager', { files: [
+      'sounds/clicks/click.mp3',
+      'sounds/clicks/clack.mp3',
+      'sounds/clicks/clock.mp3'
+    ]});
+
   }
 
-  start() {
+  async start() {
     super.start();
+    this.pattern = [1, 1, 1, 1, 1, 1, 1, 1];
+    const frequency = 500;
+    const soundNum = 0;
+    this.buffer = this.audioBufferManager.data[soundNum];
+    // console.log(this.buffer)
+    // this.patternEngine = new PatternEngine(this.syncScheduler, this.pattern, frequency);
+    this.patternEngine = new BufferEngine(this.syncScheduler, this.pattern, this.buffer);
 
-    let counter = 0;
+ 
 
-    this.view = new soundworks.CanvasView(template, model, {
-      'click': () => { throw new Error('error n° ' + (counter++)); },
+
+
+
+
+    this.view = new soundworks.SegmentedView(template, { 
+      pattern: this.pattern,
+      frequency: frequency,
+      soundNum: soundNum
     }, {
-      id: this.id,
-      preservePixelRatio: true,
-    });
+      'click .beat': (e) => {
+        const $el = e.target;
+        const index = parseInt($el.dataset.index);
+        const value = $el.checked ? 1 : 0;
+        this.pattern[index] = value;
+      },
+      'input #frequency': (e) => {
+        const $el = e.target;
+        const frequency = parseInt($el.value);
+        this.patternEngine.frequency = frequency;
+      },
+      'input #soundNum': (e) => {
+        const $el = e.target;
+        const soundNum = parseInt($el.value);
+        this.patternEngine.buffer = this.audioBufferManager.data[soundNum];
+      }
+    }, {});
 
-    this.show().then(() => {
-      this.renderer = new PlayerRenderer();
-      this.view.addRenderer(this.renderer);
-      this.view.setPreRender(function(ctx, dt, canvasWidth, canvasHeight) {
-        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-      });
-    });
-  }
+
+
+
+
+//on est sur que la page est affichée
+    await this.show()
+
+    this.sharedParams.addParamListener('BPM', () => this.updateEnginePeriod());
+    this.sharedParams.addParamListener('numBeats', () => this.updateEnginePeriod());
+
+    this.updateEnginePeriod();
+
+    }
+
+
+
+    updateEnginePeriod() {
+      if (this.patternEngine.master) {
+        this.syncScheduler.remove(this.patternEngine);
+      }
+      const BPM = this.sharedParams.getValue('BPM');
+      const numBeats = this.sharedParams.getValue('numBeats');
+      const period = (60 / BPM) / numBeats;
+//        const numeroClient = soundworks.client.index % frequencies.length;
+      
+
+//TEMPS SYNCHRONISE
+      const syncTime = this.syncScheduler.syncTime; //on recupere le temps absolu du serveur
+      const numPeriodsSinceOrigin = Math.ceil(syncTime / period);
+      const nextPatternIndex = numPeriodsSinceOrigin % this.pattern.length;
+      const startTime = numPeriodsSinceOrigin * period; //division arrondie à l'entier supérieure    
+      this.patternEngine.period = period;
+      this.patternEngine.patternIndex = nextPatternIndex;
+      this.syncScheduler.add(this.patternEngine, startTime); //on schedule le patternEngine
+    }
+
+
+    // const period = 0.1
+   
+
+//TEMPS NON SYNCHRO 
+   // const scheduler = audio.getScheduler();
+
+
+//Dans le cas d'élements simples!
+//il faut updater le parametre à la main, c'est à dire patternEngine.period = blabla
+
+    
 }
 
 export default PlayerExperience;

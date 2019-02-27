@@ -15,7 +15,7 @@ class ControllerExperience extends Experience {
     this.sharedParamsComponent = new SharedParamsComponent(this, this.sharedParams);
     this.logComponent = new LogComponent(this);
 
-    this.setGuiOptions('numPlayers', { readonly: true });
+    this.setGuiOptions('numPlayers', { readonly: true }); //ici c'est cool
 
     if (options.auth)
       this.auth = this.require('auth');
@@ -37,6 +37,18 @@ class ControllerExperience extends Experience {
             break;
         }
       });
+
+    // new controllers.Slider({
+    //   label: 'period',
+    //   min: 0.01,
+    //   max: 4,
+    //   step: 0.01,
+    //   container: '#container',
+    //   default: 1,
+    //   callback: (value) => {
+    //     patternEngine.period = value;
+    //   }
+    // });
 
     });
   }

@@ -4,6 +4,7 @@ import * as soundworks from 'soundworks/server';
 import PlayerExperience from './PlayerExperience';
 import ControllerExperience from './ControllerExperience';
 
+
 const configName = process.env.ENV || 'default';
 const configPath = path.join(__dirname, 'config', configName);
 let config = null;
@@ -38,9 +39,14 @@ soundworks.server.setClientConfigDefinition((clientType, config, httpRequest) =>
 
 const sharedParams = soundworks.server.require('shared-params');
 sharedParams.addText('numPlayers', '# players', '0');
+sharedParams.addNumber('numBeats', '# beats', 1, 16, 1, 4);
+sharedParams.addNumber('BPM', 'BPM', 60, 400, 1, 200);
 
 
+
+//on instancie les différents types de clients
 const experience = new PlayerExperience('player');
 const controller = new ControllerExperience('controller');
+
 
 soundworks.server.start();

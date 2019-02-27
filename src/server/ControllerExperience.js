@@ -10,7 +10,7 @@ class ControllerExperience extends Experience {
     if (options.auth)
       this.auth = this.require('auth');
   }
-
+//par défaut, toutes les erreurs de tous les clients sont affichées dans le controlleur.
   start() {
     this.errorReporter.addListener('error', (file, line, col, msg, userAgent) => {
       this.broadcast('controller', null, 'log', 'error', file, line, col, msg, userAgent);
